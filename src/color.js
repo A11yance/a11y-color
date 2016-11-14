@@ -113,7 +113,7 @@ export function calculateContrastRatio (fgColor, bgColor) {
 };
 
 /**
- * Combine the two given color according to alpha blending.
+ * Combine the two given colors according to alpha blending.
  *
  * @param {Color} fgColor - the foreground color.
  * @param {Color} bgColor - the background color.
