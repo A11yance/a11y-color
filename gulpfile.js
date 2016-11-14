@@ -2,6 +2,7 @@ var gulp = require('gulp');
 var jscs = require('gulp-jscs');
 var jshint = require('gulp-jshint');
 var jsdoc = require('gulp-jsdoc');
+var rename = require("gulp-rename");
 
 var paths = {
   src: [
@@ -40,6 +41,12 @@ gulp.task('jshint', function () {
     .pipe(jshint());
 });
 
-gulp.task('default', ['jshint', 'jscs']);
-gulp.task('compile', ['jshint', 'jscs', 'docs']);
+gulp.task('provide-color-src', function () {
+  return gulp
+    .src('src/color.js')
+    .pipe(rename('color.es6.js'))
+    .pipe(gulp.dest('lib'));
+});
 
+gulp.task('default', ['jshint', 'jscs']);
+gulp.task('compile', ['jshint', 'jscs', 'docs', 'provide-color-src']);
