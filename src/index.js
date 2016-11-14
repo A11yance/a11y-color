@@ -5,6 +5,18 @@
  * @module a11yCore
  */
 
-import * as color from "./color.js";
+import {
+  Color,
+  calculateContrastRatio,
+  flattenColors,
+  parseColor,
+  suggestColors,
+} from "./color.js";
 
-export { color };
+export {
+  Color,
+  calculateContrastRatio,
+  flattenColors,
+  parseColor,
+  suggestColors,
+};
