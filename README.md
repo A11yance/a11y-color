@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/A11yance/a11y-color.svg?branch=master)](https://travis-ci.org/A11yance/a11y-color)
+
 # Accessibility Color Tools (a11y-color)
 
 ## Utilities
