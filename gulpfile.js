@@ -9,7 +9,7 @@ var paths = {
     'src/**/*.js'
   ],
   lib: [
-    'lib/**/*.js'
+    'lib/**/!(*.es6)*.js'
   ],
   test: [
     'test/**/*.js'
