@@ -355,9 +355,8 @@ function luminanceFromContrastRatio (luminance, contrast, higher) {
  * @private
  */
 function translateColor (ycc, luma) {
-  let endpoint = (luma > ycc.luma) ? WHITE_YCC : BLACK_YCC;
-  let cubeFaces = (endpoint == WHITE_YCC) ? YCC_CUBE_FACES_WHITE
-    : YCC_CUBE_FACES_BLACK;
+  let lighter = luma > ycc.luma;
+  let endpoint = lighter ? WHITE_YCC : BLACK_YCC;
 
   let a = new YCbCr([0, ycc.Cb, ycc.Cr]);
   let b = new YCbCr([1, ycc.Cb, ycc.Cr]);
@@ -366,34 +365,40 @@ function translateColor (ycc, luma) {
 
   let intersection = null;
 
-  for (let i = 0; i < cubeFaces.length; i++) {
-    let cubeFace = cubeFaces[i];
-    intersection = findIntersection(line, cubeFace);
+  let cubeFaces = (lighter ? YCC_CUBE_FACES_WHITE : YCC_CUBE_FACES_BLACK);
+  for (let cubeFace of cubeFaces) {
+    let candidateIntersection = findIntersection(line, cubeFace);
+    if (candidateIntersection.z < 0 || candidateIntersection.z > 1)
+      continue;
 
-    if (intersection.z >= 0 && intersection.z <= 1) {
-      break;
+    if (!intersection) {
+      intersection = candidateIntersection;
+      continue;
     }
+
+    // May intersect more than one plane, since planes continue beyond edges of cube.
+    // Find the closest intersection to original luma, as this will be the cube edge.
+    if (Math.abs(candidateIntersection.z - ycc.luma) < Math.abs(intersection.luma - ycc.luma))
+	intersection = candidateIntersection;
   }
 
-  if (!intersection) {
+  if (!intersection)
     throw "Couldn't find intersection with YCbCr color cube for Cb=" + ycc.Cb + ", Cr=" + ycc.Cr + ".";
-  }
 
-  if (intersection.x != ycc.x || intersection.y != ycc.y) {
+  if (intersection.x != ycc.x || intersection.y != ycc.y)
     throw "Intersection has wrong Cb/Cr values.";
-  }
 
-  if (Math.abs(endpoint.luma - intersection.luma) < Math.abs(endpoint.luma - luma)) {
-    let translatedColor = [luma, ycc.Cb, ycc.Cr];
+  // If luma is closer to endpoint than intersection.luma is, point is outside cube.
+  if (Math.abs(endpoint.luma - intersection.luma) > Math.abs(endpoint.luma - luma)) {
+    let dLuma = luma - intersection.luma;
+    let scale = dLuma / (endpoint.luma - intersection.luma);
+    let translatedColor = [luma,
+			   intersection.Cb - (intersection.Cb * scale),
+			   intersection.Cr - (intersection.Cr * scale)];
     return fromYCbCrArray(translatedColor);
   }
 
-  let dLuma = luma - intersection.luma;
-  let scale = dLuma / (endpoint.luma - intersection.luma);
-  let translatedColor = [luma,
-      intersection.Cb - (intersection.Cb * scale),
-      intersection.Cr - (intersection.Cr * scale)];
-
+  let translatedColor = [luma, ycc.Cb, ycc.Cr];
   return fromYCbCrArray(translatedColor);
 }
 

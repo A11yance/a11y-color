@@ -48,5 +48,5 @@ gulp.task('provide-color-src', function () {
     .pipe(gulp.dest('lib'));
 });
 
-gulp.task('default', ['jshint', 'jscs']);
+gulp.task('default', ['jshint']);
 gulp.task('compile', ['jshint', 'jscs', 'docs', 'provide-color-src']);

@@ -105,6 +105,21 @@ describe("calculateContrastRatio", () => {
       });
     });
   });
+
+  describe("with a white background and a light green foreground", () => {
+    it("returns a dark green", () => {
+      let bg = parseColor("rgb(255, 255, 255)");
+      let fg = parseColor("rgb(2, 184, 117)");
+
+      let suggestions = suggestColors(bg, fg, {
+          AA: 3.0,
+	  AAA: 4.5
+      });
+
+      expect(suggestions.AA.contrast).to.be.at.least(2.95);
+      expect(suggestions.AAA.contrast).to.be.at.least(4.45);
+    });
+  });
 });
 
 describe("Color", () => {
