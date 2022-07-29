@@ -6,9 +6,9 @@
   "license": "Apache License 2.0",
   "repository": {
     "type": "git",
-    "url": "git://github.com/jessebeach/a11y-color.git"
+    "url": "git://github.com/A11yance/a11y-color.git"
   },
-  "bugs": "http://github.com/jessebeach/a11y-color/issues",
+  "bugs": "http://github.com/A11yance/a11y-color/issues",
   "dependencies": {
     "core-js": "^0.9.13"
   },
